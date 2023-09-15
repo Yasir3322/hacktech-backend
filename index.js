@@ -26,7 +26,7 @@ const chatuserRouter = require("./routes/chatusers");
 const messageRouter = require("./routes/messages");
 
 app.use(cors({ origin: "*" }));
-const port = 5000;
+const port = 8000;
 
 app.use(express.json());
 app.use("/api/v1", express.static("./upload/images"));

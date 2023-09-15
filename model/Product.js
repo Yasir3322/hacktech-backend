@@ -28,6 +28,11 @@ const ProductSchema = mongoose.Schema(
     isOnline: {
       type: Boolean,
       required: true,
+      default: false,
+    },
+    isSold: {
+      type: Boolean,
+      default: false,
     },
     images: {
       type: Array,

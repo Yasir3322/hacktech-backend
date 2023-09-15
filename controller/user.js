@@ -31,4 +31,24 @@ const loginUser = async (req, res) => {
   }
 };
 
-module.exports = { createUser, loginUser };
+const updateUser = async (req, res) => {
+  const { id } = req.user;
+  console.log(req.file);
+  const image = {
+    image: `http://localhost:5000/api/v1/${req.file.filename}`,
+  };
+  // return;
+  const newUser = await User.findOneAndUpdate({ _id: id }, image, {
+    new: true,
+    runValidator: true,
+  });
+  res.status(200).json({ newUser });
+};
+
+const getUser = async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findOne({ _id: id });
+  res.status(200).json({ user });
+};
+
+module.exports = { createUser, loginUser, updateUser, getUser };

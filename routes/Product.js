@@ -11,6 +11,7 @@ const {
   findAllProducts,
   findUserProducts,
   findSingleProduct,
+  editProduct,
 } = require("../controller/Product");
 router
   .route("/createproduct")
@@ -19,5 +20,5 @@ router
 router.route("/allproducts").get(findAllProducts);
 router.route("/:id").get(findUserProducts);
 router.route("/singleproduct/:id").get(findSingleProduct);
-
+router.route("/editlisting/:id").patch(editProduct);
 module.exports = router;

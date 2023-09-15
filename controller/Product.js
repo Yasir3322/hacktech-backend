@@ -41,13 +41,23 @@ const createProduct = async (req, res) => {
     hashtags: req.body.hashtags,
     catagory: req.body.catagory,
     condition: req.body.condition,
+    priceid: stripproduct.default_price,
     isOnline: req.body.isOnline,
     images: images_arr,
     sellerid: id,
-    priceid: stripproduct.default_price,
   });
   await channels.trigger("hacktech", "create-product", product);
   res.status(200).json({ product });
+};
+
+const editProduct = async (req, res) => {
+  const { id } = req.params;
+  const product = await Product.findByIdAndUpdate({ _id: id }, req.body, {
+    new: true,
+    runValidators: true,
+  });
+  res.status(200).json({ product });
+  // res.send(id);
 };
 
 const findAllProducts = async (req, res) => {
@@ -79,4 +89,5 @@ module.exports = {
   findAllProducts,
   findUserProducts,
   findSingleProduct,
+  editProduct,
 };

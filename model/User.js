@@ -25,13 +25,14 @@ const UserSchema = mongoose.Schema({
   },
   image: {
     type: String,
+    default: "",
   },
   privacypolicy: {
     type: Boolean,
   },
-  isEmailVarified: {
-    type: Boolean,
-    default: false,
+  socketid: {
+    type: String,
+    required: true,
   },
 });
 

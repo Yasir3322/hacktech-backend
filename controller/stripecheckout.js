@@ -3,23 +3,25 @@ const stripe = require("stripe")(
 );
 
 const stripecheckout = async (req, res) => {
+  // console.log(req.body.paymentdata);
+  // return;
+  const itemsarr = req.body.paymentdata.map((item) => {
+    return { price: item.priceid, quantity: item.quantity };
+  });
+  // console.log(itemsarr);
+  // return;
   const price_id = req.body.price_id;
-  console.log(price_id);
+  // console.log(price_id);
   const product_id = req.body.product_id;
   // console.log(service_id);
   try {
     const session = await stripe.checkout.sessions.create({
-      line_items: [
-        {
-          price: price_id,
-          quantity: 1,
-        },
-      ],
+      line_items: itemsarr,
       mode: "payment",
-      metadata: {
-        buyer_id: req.user.id,
-        product_id: product_id,
-      },
+      // metadata: {
+      //   buyer_id: req.user.id,
+      //   product_id: product_id,
+      // },
       success_url: "http://127.0.0.1:5173/Successfull",
       cancel_url: "http://127.0.0.1:5173/paymentfailure",
     });

@@ -25,7 +25,7 @@ const UserSchema = mongoose.Schema({
   },
   image: {
     type: String,
-    default: "",
+    default: null,
   },
   privacypolicy: {
     type: Boolean,
@@ -33,6 +33,10 @@ const UserSchema = mongoose.Schema({
   socketid: {
     type: String,
     required: true,
+  },
+  userreview: {
+    type: Number,
+    default: 0,
   },
 });
 

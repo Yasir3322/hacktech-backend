@@ -24,6 +24,7 @@ const productreqRouter = require("./routes/productRequest");
 const stripecheckoutRouter = require("./routes/stripecheckout");
 const chatuserRouter = require("./routes/chatusers");
 const messageRouter = require("./routes/messages");
+const notificationRouter = require("./routes/notification");
 
 app.use(cors({ origin: "*" }));
 const port = 5000;
@@ -41,6 +42,7 @@ app.use("/api/verifytoken", tokenloginRouter);
 app.use("/api/stripe", stripecheckoutRouter);
 app.use("/api/users", chatuserRouter);
 app.use("/api/message", messageRouter);
+app.use("/api/notification", notificationRouter);
 
 let users = [];
 

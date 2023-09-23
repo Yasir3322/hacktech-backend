@@ -13,6 +13,10 @@ const productReq = mongoose.Schema({
     type: String,
     required: true,
   },
+  approvetosold: {
+    type: String,
+    default: false,
+  },
 });
 
 module.exports = mongoose.model("productRequest", productReq);

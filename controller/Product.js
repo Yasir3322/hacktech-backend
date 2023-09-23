@@ -75,7 +75,8 @@ const findAllProducts = async (req, res) => {
 const findUserProducts = async (req, res) => {
   const { id } = req.params;
   const products = await Product.find({ sellerid: id });
-  res.status(200).json({ products });
+  const totalProductCount = await Product.countDocuments({ sellerid: id });
+  res.status(200).json({ products, totalProductCount });
 };
 
 const findSingleProduct = async (req, res) => {

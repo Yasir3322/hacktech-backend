@@ -2,13 +2,11 @@ const mongoose = require("mongoose");
 
 const reviewSchema = mongoose.Schema(
   {
-    buyerName: {
-      type: String,
+    reviewBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
     },
-    buyerImage: {
-      type: String,
-    },
-    buyerComment: {
+    reviewerComment: {
       type: String,
       required: true,
     },
@@ -16,11 +14,7 @@ const reviewSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
-    sellerid: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "user",
-    },
-    buyerid: {
+    reviewto: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
     },

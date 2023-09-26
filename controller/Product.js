@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const Product = require("../model/Product");
 const Channels = require("pusher");
 const stripe = require("stripe")(
@@ -85,10 +86,55 @@ const findSingleProduct = async (req, res) => {
   res.status(200).json({ product });
 };
 
+const getProductUserDetail = async (req, res) => {
+  const { id } = req.params;
+  const userProductDetail = await Product.aggregate([
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(id),
+      },
+    },
+    {
+      $project: {
+        sellerid: 1,
+        _id: 0,
+      },
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "sellerid",
+        foreignField: "_id",
+        as: "seller",
+      },
+    },
+    {
+      $lookup: {
+        from: "reviews",
+        localField: "sellerid",
+        foreignField: "reviewto",
+        pipeline: [
+          {
+            $lookup: {
+              from: "users",
+              localField: "reviewby",
+              foreignField: "_id",
+              as: "reviewerdetail",
+            },
+          },
+        ],
+        as: "reviews",
+      },
+    },
+  ]);
+  res.status(200).json({ userProductDetail });
+};
+
 module.exports = {
   createProduct,
   findAllProducts,
   findUserProducts,
   findSingleProduct,
   editProduct,
+  getProductUserDetail,
 };

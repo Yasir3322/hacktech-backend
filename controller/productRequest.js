@@ -2,6 +2,15 @@ const { default: mongoose } = require("mongoose");
 const productrequest = require("../model/productRequest");
 const ChatWith = require("../model/chatusers");
 const Product = require("../model/Product");
+const Channels = require("pusher");
+
+const channels = new Channels({
+  appId: "1663602",
+  key: "1904b460da23661d8163",
+  secret: "9f1b5ab983407f080226",
+  cluster: "ap2",
+  useTLS: true,
+});
 
 const productRequest = async (req, res) => {
   const { id } = req.user;
@@ -60,4 +69,20 @@ const getReq = async (req, res) => {
   res.status(200).json({ productReq });
 };
 
-module.exports = { productRequest, getReq };
+const updateProductRequest = async (req, res) => {
+  const { prodid, buyerid } = req.headers;
+  const updatedProductReq = await productrequest.findOneAndUpdate(
+    { prodid: prodid, buyerid: buyerid },
+    req.body,
+    { new: true, runValidators: true }
+  );
+  await channels.trigger("hacktech", "update-productreq", {
+    prodid,
+    ...req.body,
+    buyerid,
+  });
+
+  res.status(200).json({ updatedProductReq });
+};
+
+module.exports = { productRequest, getReq, updateProductRequest };

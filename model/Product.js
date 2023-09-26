@@ -30,9 +30,9 @@ const ProductSchema = mongoose.Schema(
       required: true,
       default: false,
     },
-    isSold: {
+    instock: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     images: {
       type: Array,

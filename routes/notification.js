@@ -5,7 +5,7 @@ const router = express.Router();
 const {
   createNotification,
   allNotification,
-} = require("../controller/Notification");
+} = require("../controller/notification");
 
 router.route("/createnotification").post(createNotification);
 router.route("/allnotification/:id").get(allNotification);

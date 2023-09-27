@@ -31,7 +31,7 @@ const createProduct = async (req, res) => {
 
   const { id } = req.user;
   const images_arr = req.files.map((file) => {
-    return `http://localhost:5000/api/v1/${file.filename}`;
+    return file.filename;
   });
   // console.log(images_arr);
   // return;

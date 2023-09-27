@@ -13,6 +13,7 @@ const {
   findSingleProduct,
   editProduct,
   getProductUserDetail,
+  updateSoldValue,
 } = require("../controller/Product");
 router
   .route("/createproduct")
@@ -23,4 +24,5 @@ router.route("/:id").get(findUserProducts);
 router.route("/singleproduct/:id").get(findSingleProduct);
 router.route("/editlisting/:id").patch(editProduct);
 router.route("/getuserdetail/:id").get(getProductUserDetail);
+router.route("/updatesoldvalue/:id").patch(updateSoldValue);
 module.exports = router;

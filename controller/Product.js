@@ -130,6 +130,25 @@ const getProductUserDetail = async (req, res) => {
   res.status(200).json({ userProductDetail });
 };
 
+const updateSoldValue = async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  try {
+    const product = await Product.findOneAndUpdate(
+      { _id: id },
+      { $inc: { sold: 1 } },
+      { new: true }
+    );
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+    res.status(200).json({ product });
+  } catch (error) {
+    console.error("Error updating product:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 module.exports = {
   createProduct,
   findAllProducts,
@@ -137,4 +156,5 @@ module.exports = {
   findSingleProduct,
   editProduct,
   getProductUserDetail,
+  updateSoldValue,
 };

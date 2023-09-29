@@ -32,7 +32,6 @@ const UserSchema = mongoose.Schema({
   },
   socketid: {
     type: String,
-    required: true,
   },
   userreview: {
     type: Number,

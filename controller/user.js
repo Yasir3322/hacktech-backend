@@ -35,7 +35,7 @@ const updateUser = async (req, res) => {
   const { id } = req.user;
   console.log(req.file);
   const image = {
-    image: `http://localhost:5000/api/v1/${req.file.filename}`,
+    image: `${req.file.filename}`,
   };
   // return;
   const newUser = await User.findOneAndUpdate({ _id: id }, image, {

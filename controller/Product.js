@@ -82,7 +82,32 @@ const findUserProducts = async (req, res) => {
 
 const findSingleProduct = async (req, res) => {
   const { id } = req.params;
-  const product = await Product.findOne({ _id: id });
+  const { userid } = req.headers;
+  // const product = await Product.findOne({ _id: id });
+  // res.status(200).json({ product });
+
+  const product = await Product.aggregate([
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(id),
+      },
+    },
+    {
+      $lookup: {
+        from: "favourites",
+        localField: "_id",
+        foreignField: "productid",
+        pipeline: [
+          {
+            $match: {
+              userid: new mongoose.Types.ObjectId(userid),
+            },
+          },
+        ],
+        as: "favourite",
+      },
+    },
+  ]);
   res.status(200).json({ product });
 };
 

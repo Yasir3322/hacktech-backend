@@ -1,5 +1,6 @@
 const { default: mongoose } = require("mongoose");
 const Product = require("../model/Product");
+const catagory = require("../model/catagories");
 const Channels = require("pusher");
 const stripe = require("stripe")(
   "sk_test_51MrYHJEg2I5qxKjJ4EYXuaKNXoJiPBXutcgXzRuKkGVgITnDeDBTQU3f5VtaMnMo138GBPGjfc33aGFCXfenx2Kg0065g0Sp9S"
@@ -62,11 +63,41 @@ const editProduct = async (req, res) => {
 };
 
 const findAllProducts = async (req, res) => {
-  const allProducts = await Product.aggregate([
+  const { userid } = req.headers;
+  console.log(userid);
+  // const allProducts = await Product.aggregate([
+  //   {
+  //     $group: {
+  //       _id: "$catagory",
+  //       products: { $push: "$$ROOT" },
+  //     },
+  //   },
+  // ]);
+
+  const allProducts = await catagory.aggregate([
     {
-      $group: {
-        _id: "$catagory",
-        products: { $push: "$$ROOT" },
+      $lookup: {
+        from: "products",
+        localField: "title",
+        foreignField: "catagory",
+        pipeline: [
+          {
+            $lookup: {
+              from: "favourites",
+              localField: "_id",
+              foreignField: "productid",
+              as: "favourite",
+              pipeline: [
+                {
+                  $match: {
+                    userid: new mongoose.Types.ObjectId(userid),
+                  },
+                },
+              ],
+            },
+          },
+        ],
+        as: "products",
       },
     },
   ]);
@@ -174,6 +205,51 @@ const updateSoldValue = async (req, res) => {
   }
 };
 
+const updateLiked = async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  try {
+    const product = await Product.findOneAndUpdate(
+      { _id: id },
+      { $inc: { totalliked: 1 } },
+      { new: true }
+    );
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+    res.status(200).json({ product });
+  } catch (error) {
+    console.error("Error updating product:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const decreaseLiked = async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  try {
+    const product = await Product.findOne({ _id: id });
+
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    if (product.totalliked > 0) {
+      const updatedProduct = await Product.findOneAndUpdate(
+        { _id: id },
+        { $inc: { totalliked: -1 } },
+        { new: true }
+      );
+      res.status(200).json({ product: updatedProduct });
+    } else {
+      res.status(400).json({ error: "Value cannot be decreased further" });
+    }
+  } catch (error) {
+    console.error("Error updating product:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 module.exports = {
   createProduct,
   findAllProducts,
@@ -182,4 +258,6 @@ module.exports = {
   editProduct,
   getProductUserDetail,
   updateSoldValue,
+  updateLiked,
+  decreaseLiked,
 };

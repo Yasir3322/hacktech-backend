@@ -58,6 +58,10 @@ const ProductSchema = mongoose.Schema(
       type: Number,
       default: 0,
     },
+    totalliked: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );

@@ -40,4 +40,17 @@ const getUserMess = async (req, res) => {
   res.status(200).json({ messages });
 };
 
-module.exports = { messages, getAllMessages, getUserMess };
+const updateMessStatus = async (req, res) => {
+  const { id, to } = req.headers;
+  try {
+    const result = await Message.updateMany(
+      { id: id, to: to },
+      { $set: { status: "read" } }
+    );
+    res.status(200).json({ result });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+module.exports = { messages, getAllMessages, getUserMess, updateMessStatus };

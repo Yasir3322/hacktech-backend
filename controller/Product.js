@@ -63,45 +63,71 @@ const editProduct = async (req, res) => {
 };
 
 const findAllProducts = async (req, res) => {
+  console.log(req.query.title);
+  const searchTerm = req?.query?.title;
   const { userid } = req.headers;
-  console.log(userid);
-  // const allProducts = await Product.aggregate([
-  //   {
-  //     $group: {
-  //       _id: "$catagory",
-  //       products: { $push: "$$ROOT" },
-  //     },
-  //   },
-  // ]);
-
-  const allProducts = await catagory.aggregate([
-    {
-      $lookup: {
-        from: "products",
-        localField: "title",
-        foreignField: "catagory",
-        pipeline: [
-          {
-            $lookup: {
-              from: "favourites",
-              localField: "_id",
-              foreignField: "productid",
-              as: "favourite",
-              pipeline: [
-                {
-                  $match: {
-                    userid: new mongoose.Types.ObjectId(userid),
+  if (userid?.length > 0) {
+    const allProducts = await catagory.aggregate([
+      {
+        $lookup: {
+          from: "products",
+          localField: "title",
+          foreignField: "catagory",
+          pipeline: [
+            {
+              $lookup: {
+                from: "favourites",
+                localField: "_id",
+                foreignField: "productid",
+                as: "favourite",
+                pipeline: [
+                  {
+                    $match: {
+                      userid: new mongoose.Types.ObjectId(userid),
+                    },
                   },
-                },
-              ],
+                ],
+              },
             },
-          },
-        ],
-        as: "products",
+          ],
+          as: "products",
+        },
       },
-    },
-  ]);
-  res.status(200).json({ allProducts });
+    ]);
+    res.status(200).json({ allProducts });
+  } else if (searchTerm) {
+    const allProducts = await catagory.aggregate([
+      {
+        $lookup: {
+          from: "products",
+          localField: "title",
+          foreignField: "catagory",
+          as: "products",
+        },
+      },
+      {
+        $match: {
+          $or: [
+            { title: { $regex: searchTerm, $options: "i" } }, // Case-insensitive title search
+            { description: { $regex: searchTerm, $options: "i" } }, // Case-insensitive description search
+          ],
+        },
+      },
+    ]);
+    res.status(200).json({ allProducts });
+  } else {
+    const allProducts = await catagory.aggregate([
+      {
+        $lookup: {
+          from: "products",
+          localField: "title",
+          foreignField: "catagory",
+          as: "products",
+        },
+      },
+    ]);
+    res.status(200).json({ allProducts });
+  }
 };
 
 const findUserProducts = async (req, res) => {

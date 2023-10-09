@@ -70,9 +70,14 @@ socketIO.on("connection", (socket) => {
     users.push(data);
     socketIO.emit("newUserResponse", users);
   });
-});
 
-console.log(users);
+  socket.on("disconnect", () => {
+    console.log("🔥: A user disconnected");
+    users = users.filter((user) => user.socketId !== socket.id);
+    socketIO.emit("newUserResponse", users);
+    socket.disconnect();
+  });
+});
 
 http.listen(port, () => {
   connectdb();

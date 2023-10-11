@@ -28,10 +28,12 @@ const productRequest = async (req, res) => {
     await ChatWith.create({
       userid: id,
       chatwith: sellerid,
+      prodreqid: prodid,
     });
     await ChatWith.create({
       userid: sellerid,
       chatwith: id,
+      prodreqid: prodid,
     });
   }
 

@@ -276,6 +276,12 @@ const decreaseLiked = async (req, res) => {
   }
 };
 
+const deleteProduct = async (req, res) => {
+  const { id } = req.params;
+  const deleteProduct = await Product.findByIdAndRemove({ _id: id });
+  res.status(200).json({ deleteProduct });
+};
+
 module.exports = {
   createProduct,
   findAllProducts,
@@ -286,4 +292,5 @@ module.exports = {
   updateSoldValue,
   updateLiked,
   decreaseLiked,
+  deleteProduct,
 };

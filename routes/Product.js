@@ -16,6 +16,7 @@ const {
   updateSoldValue,
   updateLiked,
   decreaseLiked,
+  deleteProduct,
 } = require("../controller/Product");
 router
   .route("/createproduct")
@@ -29,4 +30,5 @@ router.route("/getuserdetail/:id").get(getProductUserDetail);
 router.route("/updatesoldvalue/:id").patch(updateSoldValue);
 router.route("/updatelikedvalue/:id").patch(updateLiked);
 router.route("/decreaselikedvalue/:id").patch(decreaseLiked);
+router.route("/deleteproduct/:id").delete(deleteProduct);
 module.exports = router;

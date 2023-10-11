@@ -9,6 +9,10 @@ const chatUserSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",
   },
+  prodreqid: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "product",
+  },
 });
 
 module.exports = mongoose.model("chatuser", chatUserSchema);

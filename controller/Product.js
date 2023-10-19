@@ -15,12 +15,15 @@ const channels = new Channels({
 
 const createProduct = async (req, res) => {
   // console.log(req.body);
+  // return;
   // console.log(req.files);
   // res.send("hi");
   // return;
 
   const { price, title } = req.body;
   const price_for_stripe = price * 100;
+  console.log(price_for_stripe);
+  // return;
   const stripproduct = await stripe.products.create({
     name: title,
     default_price_data: {

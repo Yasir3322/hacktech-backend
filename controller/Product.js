@@ -5,7 +5,6 @@ const Channels = require("pusher");
 const stripe = require("stripe")(
   "sk_test_51MrYHJEg2I5qxKjJ4EYXuaKNXoJiPBXutcgXzRuKkGVgITnDeDBTQU3f5VtaMnMo138GBPGjfc33aGFCXfenx2Kg0065g0Sp9S"
 );
-
 const channels = new Channels({
   appId: "1663602",
   key: "1904b460da23661d8163",
@@ -120,8 +119,6 @@ const findAllProducts = async (req, res) => {
         $match: {
           $or: [
             { title: { $regex: searchTerm, $options: "i" } }, // Case-insensitive title search
-            { description: { $regex: searchTerm, $options: "i" } }, // Case-insensitive description search
-            { catagory: { $regex: searchTerm, $options: "i" } },
           ],
         },
       },

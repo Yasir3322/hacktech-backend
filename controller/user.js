@@ -10,10 +10,12 @@ sgmail.setApiKey(API_KEY);
 const createUser = async (req, res) => {
   const { password, confirmPassword } = req.body;
 
-  if (password === confirmPassword) {
+  if (password.length < 8) {
     const user = await User.create({ ...req.body });
     const token = user.createjwt();
     res.status(200).json({ user: user, token: token });
+  } else {
+    res.status(500).send("Password must be at least 8 characters long");
   }
 };
 
@@ -22,7 +24,9 @@ const loginUser = async (req, res) => {
   const user = await User.findOne({ email });
   if (user) {
     const isPasswordCorrect = await user.comparePassword(password);
-    if (isPasswordCorrect) {
+    if (!isPasswordCorrect) {
+      res.status(401).json({ message: "Your password is not Correct" });
+    } else {
       const token = await user.createjwt();
       res.status(200).json({ user, token });
     }

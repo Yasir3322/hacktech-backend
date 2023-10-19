@@ -25,6 +25,8 @@ const stripecheckoutRouter = require("./routes/stripecheckout");
 const chatuserRouter = require("./routes/chatusers");
 const messageRouter = require("./routes/messages");
 const notificationRouter = require("./routes/notification");
+const uploadRouter = require("./routes/upload");
+const RestPassRouter = require("./routes/resetpassword");
 
 app.use(cors({ origin: "*" }));
 const port = 8000;
@@ -43,14 +45,18 @@ app.use("/api/stripe", stripecheckoutRouter);
 app.use("/api/users", chatuserRouter);
 app.use("/api/message", messageRouter);
 app.use("/api/notification", notificationRouter);
+app.use("/api/aws", uploadRouter);
+app.use("/api/password", RestPassRouter);
 
 let users = [];
+const messages = [];
 
 socketIO.on("connection", (socket) => {
   console.log(`${socket.id} just connected`);
 
   socket.on("message", (data) => {
     console.log(data);
+    messages.push(data);
     const targetedUser = users.find((user) => user.userid === data.to);
     const sender = users.find((sender) => sender.userid === data.id);
     console.log({ targetedUser });

@@ -40,6 +40,7 @@ const createProduct = async (req, res) => {
     title: req.body.title,
     description: req.body.description,
     price: req.body.price,
+    quantity: req.body.quantity,
     hashtags: req.body.hashtags,
     catagory: req.body.catagory,
     condition: req.body.condition,
@@ -102,6 +103,16 @@ const findAllProducts = async (req, res) => {
           from: "products",
           localField: "title",
           foreignField: "catagory",
+          pipeline: [
+            {
+              $lookup: {
+                from: "favourites",
+                localField: "_id",
+                foreignField: "productid",
+                as: "favourite",
+              },
+            },
+          ],
           as: "products",
         },
       },
@@ -110,6 +121,7 @@ const findAllProducts = async (req, res) => {
           $or: [
             { title: { $regex: searchTerm, $options: "i" } }, // Case-insensitive title search
             { description: { $regex: searchTerm, $options: "i" } }, // Case-insensitive description search
+            { catagory: { $regex: searchTerm, $options: "i" } },
           ],
         },
       },

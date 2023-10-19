@@ -20,6 +20,23 @@ const findFavourite = async (req, res) => {
         from: "products",
         localField: "productid",
         foreignField: "_id",
+        pipeline: [
+          {
+            $lookup: {
+              from: "favourites",
+              localField: "_id",
+              foreignField: "productid",
+              as: "favourite",
+              pipeline: [
+                {
+                  $match: {
+                    userid: new mongoose.Types.ObjectId(id),
+                  },
+                },
+              ],
+            },
+          },
+        ],
         as: "products",
       },
     },

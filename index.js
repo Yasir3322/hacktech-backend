@@ -32,7 +32,7 @@ const path = require("path");
 app.use(cors({ origin: "*" }));
 const port = 8000;
 
-app.use(express.static("../Frontend/dist"));
+app.use(express.static("../hacktech/dist"));
 
 app.use(express.json());
 app.use("/api/v1", express.static("./upload/images"));
@@ -52,7 +52,7 @@ app.use("/api/aws", uploadRouter);
 app.use("/api/password", RestPassRouter);
 
 app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "../Frontend/dist", "index.html"));
+  res.sendFile(path.resolve(__dirname, "../hacktech/dist", "index.html"));
 });
 
 let users = [];

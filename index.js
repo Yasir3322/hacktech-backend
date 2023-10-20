@@ -27,9 +27,12 @@ const messageRouter = require("./routes/messages");
 const notificationRouter = require("./routes/notification");
 const uploadRouter = require("./routes/upload");
 const RestPassRouter = require("./routes/resetpassword");
+const path = require("path");
 
 app.use(cors({ origin: "*" }));
 const port = 8000;
+
+app.use(express.static("../Frontend/dist"));
 
 app.use(express.json());
 app.use("/api/v1", express.static("./upload/images"));
@@ -47,6 +50,10 @@ app.use("/api/message", messageRouter);
 app.use("/api/notification", notificationRouter);
 app.use("/api/aws", uploadRouter);
 app.use("/api/password", RestPassRouter);
+
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "../Frontend/dist", "index.html"));
+});
 
 let users = [];
 const messages = [];

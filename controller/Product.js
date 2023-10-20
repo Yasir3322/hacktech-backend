@@ -69,6 +69,7 @@ const findAllProducts = async (req, res) => {
   console.log(req.query.title);
   const searchTerm = req?.query?.title;
   const { userid } = req.headers;
+  console.log({ searchTerm, userid });
   if (userid?.length > 0) {
     const allProducts = await catagory.aggregate([
       {
@@ -114,15 +115,13 @@ const findAllProducts = async (req, res) => {
                 as: "favourite",
               },
             },
+            {
+              $match: {
+                title: { $regex: searchTerm, $options: "i" }, // Case-insensitive title search
+              },
+            },
           ],
           as: "products",
-        },
-      },
-      {
-        $match: {
-          $or: [
-            { title: { $regex: searchTerm, $options: "i" } }, // Case-insensitive title search
-          ],
         },
       },
     ]);

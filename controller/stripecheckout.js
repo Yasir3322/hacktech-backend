@@ -3,9 +3,9 @@ const stripe = require("stripe")(
 );
 
 const stripecheckout = async (req, res) => {
-  // console.log(req.body.paymentdata);
+  console.log(req.body.checkoutData);
   // return;
-  const itemsarr = req.body.paymentdata.map((item) => {
+  const itemsarr = req.body.checkoutData.map((item) => {
     return { price: item.priceid, quantity: item.quantity };
   });
   console.log(itemsarr);

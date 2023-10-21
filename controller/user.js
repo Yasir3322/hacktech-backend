@@ -8,9 +8,10 @@ const API_KEY =
 sgmail.setApiKey(API_KEY);
 
 const createUser = async (req, res) => {
+  console.log("called");
   const { password, confirmPassword } = req.body;
-
-  if (password.length < 8) {
+  console.log(password.length);
+  if (password.length >= 8) {
     const user = await User.create({ ...req.body });
     const token = user.createjwt();
     res.status(200).json({ user: user, token: token });

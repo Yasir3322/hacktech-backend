@@ -56,6 +56,10 @@ const createProduct = async (req, res) => {
 };
 
 const editProduct = async (req, res) => {
+  console.log(req.body);
+  console.log(req.files);
+  const { images } = req.body;
+  return;
   const { id } = req.params;
   const product = await Product.findByIdAndUpdate({ _id: id }, req.body, {
     new: true,

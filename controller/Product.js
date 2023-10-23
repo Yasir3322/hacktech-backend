@@ -56,12 +56,37 @@ const createProduct = async (req, res) => {
 };
 
 const editProduct = async (req, res) => {
-  console.log(req.body);
-  console.log(req.files);
-  const { images } = req.body;
-  return;
+  const { previousimages } = req.headers;
+  const uploadImg = req.files.map((file) => {
+    return file.filename;
+  });
+
+  const prevImgs = JSON.parse(previousimages);
+  const images_arr = [...prevImgs, ...uploadImg];
+
+  const obj = {
+    title: req.body.title,
+    description: req.body.description,
+    price: req.body.price,
+    quantity: req.body.quantity[0],
+    hashtags: req.body.hashtags,
+    catagory: req.body.catagory,
+    isOnline: req.body.isOnline,
+    condition: req.body.condition,
+    instock: req.body.instock,
+    istranding: req.body.istranding,
+    sellerid: req.body.sellerid,
+    priceid: req.body.priceid,
+    sold: req.body.sold,
+    totalliked: req.body.totalliked,
+    createdAt: req.body.createdAt,
+    updatedAt: req.body.updatedAt,
+    favourite: req.body.favourite,
+    images: images_arr,
+  };
+
   const { id } = req.params;
-  const product = await Product.findByIdAndUpdate({ _id: id }, req.body, {
+  const product = await Product.findByIdAndUpdate({ _id: id }, obj, {
     new: true,
     runValidators: true,
   });

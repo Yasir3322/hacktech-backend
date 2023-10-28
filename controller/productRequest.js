@@ -15,7 +15,7 @@ const channels = new Channels({
 const productRequest = async (req, res) => {
   const { id } = req.user;
   const { prodid } = req.body;
-
+  console.log(req.body);
   const productRequest = await productrequest.create({
     ...req.body,
     buyerid: id,

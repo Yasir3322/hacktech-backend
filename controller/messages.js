@@ -12,6 +12,7 @@ const channels = new Channels({
 
 const messages = async (req, res) => {
   const { to } = req.body;
+  console.log(res.body);
   const message = await Message.create({ ...req.body });
   await channels.trigger("hacktech", "new-message", {
     title: "you have unread message",

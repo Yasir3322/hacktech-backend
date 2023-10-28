@@ -17,6 +17,21 @@ const chatuser = async (req, res) => {
         as: "chatuser",
       },
     },
+    {
+      $lookup: {
+        from: "messages",
+        localField: "prodreqid",
+        foreignField: "productid",
+        as: "prodmess",
+      },
+    },
+    {
+      $addFields: {
+        prodmess: {
+          $arrayElemAt: ["$prodmess", -1],
+        },
+      },
+    },
   ]);
   res.status(200).json({ chatusers });
 };

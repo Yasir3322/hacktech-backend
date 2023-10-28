@@ -65,6 +65,7 @@ socketIO.on("connection", (socket) => {
     console.log(data);
     messages.push(data);
     const targetedUser = users.find((user) => user.userid === data.to);
+    console.log(users);
     const sender = users.find((sender) => sender.userid === data.id);
     console.log({ targetedUser });
     if (targetedUser) {
@@ -84,9 +85,10 @@ socketIO.on("connection", (socket) => {
     socketIO.emit("newUserResponse", users);
   });
 
-  socket.on("disconnect", () => {
+  socket.on("disconnect", ({ socket }) => {
     console.log("🔥: A user disconnected");
     users = users.filter((user) => user.socketId !== socket.id);
+    console.log(users);
     socketIO.emit("newUserResponse", users);
     socket.disconnect();
   });

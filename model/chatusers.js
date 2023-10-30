@@ -1,18 +1,21 @@
 const mongoose = require("mongoose");
 
-const chatUserSchema = mongoose.Schema({
-  userid: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "user",
+const chatUserSchema = mongoose.Schema(
+  {
+    userid: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
+    },
+    chatwith: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
+    },
+    prodreqid: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "product",
+    },
   },
-  chatwith: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "user",
-  },
-  prodreqid: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "product",
-  },
-});
+  { timestamps: true }
+);
 
 module.exports = mongoose.model("chatuser", chatUserSchema);

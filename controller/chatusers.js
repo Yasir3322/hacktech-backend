@@ -10,6 +10,11 @@ const chatuser = async (req, res) => {
       },
     },
     {
+      $sort: {
+        createdAt: -1,
+      },
+    },
+    {
       $lookup: {
         from: "users",
         localField: "chatwith",

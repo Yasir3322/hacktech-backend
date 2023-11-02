@@ -1,6 +1,9 @@
 const { default: mongoose } = require("mongoose");
 const Product = require("../model/Product");
 const catagory = require("../model/catagories");
+const { promisify } = require("util");
+const fs = require("fs");
+const convert = require("heic-convert");
 const Channels = require("pusher");
 const stripe = require("stripe")(
   "sk_test_51MrYHJEg2I5qxKjJ4EYXuaKNXoJiPBXutcgXzRuKkGVgITnDeDBTQU3f5VtaMnMo138GBPGjfc33aGFCXfenx2Kg0065g0Sp9S"
@@ -16,7 +19,7 @@ const channels = new Channels({
 const createProduct = async (req, res) => {
   // console.log(req.body);
   // return;
-  // console.log(req.files);
+  console.log(req.files);
   // res.send("hi");
   // return;
 
@@ -33,11 +36,33 @@ const createProduct = async (req, res) => {
   });
 
   const { id } = req.user;
-  const images_arr = req.files.map((file) => {
-    return file.filename;
-  });
-  // console.log(images_arr);
-  // return;
+  const images_arr = [];
+  for (let file of req.files) {
+    console.log(file);
+    try {
+      if (file.filename.includes("heic")) {
+        const inputBuffer = await promisify(fs.readFile)(
+          `${file.destination}/${file.filename}`
+        );
+        const outputBuffer = await convert({
+          buffer: inputBuffer,
+          format: "PNG",
+          quality: 1,
+        });
+        await promisify(fs.writeFile)(
+          `${file.destination}/${file.filename.split(".")[0]}.png`,
+          outputBuffer
+        );
+        images_arr.push(`${file.filename.split(".")[0]}.png`);
+        await promisify(fs.unlink)(`${file.destination}/${file.filename}`);
+      } else {
+        images_arr.push(file.filename);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  console.log(images_arr);
   const product = await Product.create({
     title: req.body.title,
     description: req.body.description,

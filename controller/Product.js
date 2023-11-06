@@ -40,7 +40,7 @@ const createProduct = async (req, res) => {
   for (let file of req.files) {
     console.log(file);
     try {
-      if (file.filename.includes("heic")) {
+      if (file.filename.includes("heic") || file.filename.includes("HEIC")) {
         const inputBuffer = await promisify(fs.readFile)(
           `${file.destination}/${file.filename}`
         );

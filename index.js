@@ -86,12 +86,12 @@ socketIO.on("connection", (socket) => {
     socketIO.emit("newUserResponse", users);
   });
 
-  socket.on("disconnect", ({ socket }) => {
+  socket?.on("disconnect", (data) => {
     console.log("🔥: A user disconnected");
-    users = users.filter((user) => user.socketId !== socket.id);
+    users = users?.filter((user) => user?.socketId !== data?.socketID);
     console.log(users);
     socketIO.emit("newUserResponse", users);
-    socket.disconnect();
+    socket?.disconnect();
   });
 });
 

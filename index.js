@@ -50,7 +50,7 @@ app.use("/api/users", chatuserRouter);
 app.use("/api/message", messageRouter);
 app.use("/api/notification", notificationRouter);
 app.use("/api/aws", uploadRouter);
-app.use("/api/password", RestPassRouter);
+app.use("/api/userpassword", RestPassRouter);
 
 app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "../hacktech/dist", "index.html"));
@@ -74,8 +74,8 @@ socketIO.on("connection", (socket) => {
     }
     console.log(sender);
     if (sender) {
-      console.log("emitted message to sender");
       socketIO.to(sender.socketId).emit("messageResponse", data);
+      console.log("emitted message to sender");
     }
     // socket.emit("messageResponse", data);
   });

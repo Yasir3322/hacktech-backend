@@ -8,9 +8,12 @@ const {
   loginUser,
   updateUser,
   getUser,
+  updatePassword
 } = require("../controller/user");
 router.route("/createuser").post(createUser);
 router.route("/loginuser").post(loginUser);
 router.route("/uploadpic").patch(Auth, upload.single("images"), updateUser);
+router.route("/updatepassword").patch(updatePassword);
 router.route("/getuser/:id").get(getUser);
+
 module.exports = router;

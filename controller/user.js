@@ -1,4 +1,5 @@
 const User = require("../model/User");
+const bcrypt = require("bcrypt");
 const sgmail = require("@sendgrid/mail");
 const VerifyEmail = require("../model/verifyEmail");
 const { v4: uuidv4 } = require("uuid");
@@ -50,10 +51,27 @@ const updateUser = async (req, res) => {
   res.status(200).json({ newUser });
 };
 
+const updatePassword = async (req, res) => {
+  const { password, id } = req.body;
+
+  if (password.length >= 8) {
+    const salt = await bcrypt.genSalt(10);
+    const bcryptpassword = await bcrypt.hash(password, salt);
+    await User.findOneAndUpdate({ _id: id }, { password: bcryptpassword }, {
+      new: true,
+      runValidator: true,
+    });
+    res.status(200).json({ success: true });
+  } else {
+    res.status(401).json({ success: false, message: "Password must be at least 8 characters long" });
+  }
+
+};
+
 const getUser = async (req, res) => {
   const { id } = req.params;
   const user = await User.findOne({ _id: id });
   res.status(200).json({ user });
 };
 
-module.exports = { createUser, loginUser, updateUser, getUser };
+module.exports = { createUser, loginUser, updateUser, getUser, updatePassword };

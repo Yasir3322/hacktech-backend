@@ -1,35 +1,28 @@
 const User = require("../model/User");
 const sgmail = require("@sendgrid/mail");
+const { sendmail } = require("../utils/sendmail");
 
 const API_KEY =
-  "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";
+  "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";
 sgmail.setApiKey(API_KEY);
 
 const resetpassword = async (req, res) => {
-  const { email } = req.body;
-  console.log(email);
+  const { email, url } = req.body;
   // return;
-  const user = await User.findOne({ email: email });
-  console.log(user);
+  const user = await User.findOne({ email: email.email });
   if (user !== null) {
     try {
-      const msg = {
-        from: "muhammadusman28510@gmail.com",
-        to: `${email}`,
+      const options = {
+        from: "trojansquareusc@gmail.com",
+        to: `${email.email}`,
         subject: "Reset Your Password",
-        text: `http://127.0.0.1:5173/resetpassword/${user._id}`,
+        text: `${url}/${user._id}`,
       };
-      sgmail
-        .send(msg)
-        .then(() => {
-          res.status(200).json({ message: "mail send successfully" });
-        })
-        .catch((error) => {
-          console.log(error);
-          res.status(404).json({ message: "mail failed" });
-        });
+
+      sendmail(options)
+      res.status(200).json({ success: true });
     } catch (error) {
-      res.status(404).json({ message: error });
+      res.status(404).json({ success: false, message: error });
     }
   } else {
     res.status(500).json({ message: "You are not Register" });

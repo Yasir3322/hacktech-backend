@@ -1,6 +1,9 @@
 const Message = require("../model/messages");
+const User = require("../model/User");
 const Notification = require("../model/notification");
 const Channels = require("pusher");
+const nodeMailer = require("nodemailer");
+const { sendmail } = require("../utils/sendmail");
 
 const channels = new Channels({
   appId: "1663602",
@@ -12,8 +15,25 @@ const channels = new Channels({
 
 const messages = async (req, res) => {
   const { to } = req.body;
-  console.log(res.body);
-  const message = await Message.create({ ...req.body });
+  const user = await User.find({ _id: to });
+  const message = await Message.create({ ...req.body, userEmail: user.email });
+  if (user !== null) {
+    try {
+      const options = {
+        from: "yasirbangash903@gmail.com",
+        // to: `${user.email}`,
+        to: "yasirtesting932@gmail.com",
+        subject: "New Unread Message From TrojanSquare",
+        text: "You have received a new message in your inbox, check now at https://trojansquare.com/chat",
+      };
+
+      sendmail(options)
+    } catch (error) {
+      res.status(404).json({ message: error });
+    }
+  } else {
+    res.status(500).json({ message: "You are not Register" });
+  }
   await channels.trigger("hacktech", "new-message", {
     title: "you have unread message",
     url: "/chat",

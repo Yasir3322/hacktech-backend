@@ -23,7 +23,8 @@ const sendmail = async (Options) => {
         //     text: "You have received a new message in your inbox, check now at https://trojansquare.com/chat.  Your recipient is now waiting for your reply"
         // }
 
-        await transporter.sendMail(Options);
+        const mailRes = await transporter.sendMail(Options);
+        console.log({ mailRes })
     } catch (error) {
         console.log(error?.message);
     }

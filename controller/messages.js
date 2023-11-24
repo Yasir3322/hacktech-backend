@@ -20,9 +20,8 @@ const messages = async (req, res) => {
   if (user !== null) {
     try {
       const options = {
-        from: "yasirbangash903@gmail.com",
-        // to: `${user.email}`,
-        to: "yasirtesting932@gmail.com",
+        from: "trojansquareusc@gmail.com",
+        to: `${user.email}`,
         subject: "New Unread Message From TrojanSquare",
         text: "You have received a new message in your inbox, check now at https://trojansquare.com/chat",
       };

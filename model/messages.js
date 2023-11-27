@@ -7,8 +7,8 @@ const messageSchema = mongoose.Schema(
       required: true,
     },
     to: {
-      type: String,
-      required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'user',
     },
     name: {
       type: String,
@@ -30,6 +30,9 @@ const messageSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "products",
     },
+    userEmail: {
+      type: String,
+    }
   },
   { timestamps: true }
 );

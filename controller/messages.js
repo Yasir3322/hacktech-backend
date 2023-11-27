@@ -16,12 +16,12 @@ const channels = new Channels({
 const messages = async (req, res) => {
   const { to } = req.body;
   const user = await User.find({ _id: to });
-  const message = await Message.create({ ...req.body, userEmail: user.email });
+  const message = await Message.create({ ...req.body, userEmail: user[0].email });
   if (user !== null) {
     try {
       const options = {
         from: "trojansquareusc@gmail.com",
-        to: `${user.email}`,
+        to: `${user[0].email}`,
         subject: "New Unread Message From TrojanSquare",
         text: "You have received a new message in your inbox, check now at https://trojansquare.com/chat",
       };
